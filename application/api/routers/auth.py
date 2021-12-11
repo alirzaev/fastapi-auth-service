@@ -43,8 +43,8 @@ def login_user(
     }
 
 
-@router.post('/check-token', response_model=schemas.User)
+@router.post('/checkToken', response_model=schemas.User)
 def check_token(
-    current_user: str = Depends(get_current_user)
+        current_user: str = Depends(get_current_user)
 ):
     return current_user
