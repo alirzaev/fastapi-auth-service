@@ -10,8 +10,8 @@ from application import schemas
 from application.api.dependencies import get_db, get_current_user, get_token_payload
 from application.core.config import config
 from application.core.security import create_access_token
+from application.database.models import User
 from application.database.redis_client import redis_client
-from application.schemas import TokenPayload
 
 router = APIRouter(tags=['auth'])
 
@@ -51,17 +51,27 @@ def login_user(
 
 @router.post('/checkToken', response_model=schemas.User)
 def check_token(
-        current_user: str = Depends(get_current_user)
+        current_user: User = Depends(get_current_user)
 ):
     return current_user
 
 
 @router.post('/revokeToken', status_code=204)
 def revoke_token(
-        token_payload: TokenPayload = Depends(get_token_payload)
+        token_payload: schemas.TokenPayload = Depends(get_token_payload)
 ):
     jwti = token_payload.jwti
 
     redis_client.setex(jwti, timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES), 'true')
 
     return Response(status_code=204)
+
+
+@router.post('/refreshToken', response_model=schemas.Token)
+def refresh_token(
+        current_user: User = Depends(get_current_user)
+):
+    return {
+        'access_token': create_access_token(current_user.id),
+        'token_type': 'bearer'
+    }
