@@ -3,8 +3,8 @@ EXPOSE 80
 
 WORKDIR /usr/src/project
 
-COPY pyproject.toml ./
-COPY poetry.lock ./
+COPY pyproject.toml poetry.lock* ./
+
 RUN pip install --no-cache-dir poetry && poetry config virtualenvs.create false
 RUN poetry install --no-root
 
