@@ -1,11 +1,17 @@
+from datetime import timedelta
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from starlette.responses import Response
 
 from application import crud
 from application import schemas
-from application.api.dependencies import get_db, get_current_user
+from application.api.dependencies import get_db, get_current_user, get_token_payload
+from application.core.config import config
 from application.core.security import create_access_token
+from application.database.redis_client import redis_client
+from application.schemas import TokenPayload
 
 router = APIRouter(tags=['auth'])
 
@@ -48,3 +54,14 @@ def check_token(
         current_user: str = Depends(get_current_user)
 ):
     return current_user
+
+
+@router.post('/revokeToken', status_code=204)
+def revoke_token(
+        token_payload: TokenPayload = Depends(get_token_payload)
+):
+    jwti = token_payload.jwti
+
+    redis_client.setex(jwti, timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES), 'true')
+
+    return Response(status_code=204)

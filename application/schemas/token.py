@@ -10,4 +10,6 @@ class Token(BaseModel):
 
 
 class TokenPayload(BaseModel):
+    jwti: str
+
     sub: Optional[int] = None

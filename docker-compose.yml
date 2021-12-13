@@ -8,11 +8,19 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - '5432:5432'
+  redis:
+    image: redis:6-alpine
+    restart: always
+    ports:
+      - '6379:6379'
   prod-db:
     image: postgres:13-alpine
     restart: always
     environment:
       POSTGRES_PASSWORD: postgres
+  prod-redis:
+    image: redis:6-alpine
+    restart: always
   test-db:
     image: postgres:13-alpine
     restart: always
@@ -28,8 +36,10 @@ services:
     restart: always
     depends_on:
       - prod-db
+      - prod-redis
     environment:
       DEBUG: 0
+      REDIS_URL: 'redis://prod-redis/0'
       SQLALCHEMY_DATABASE_URL: 'postgresql://postgres:postgres@prod-db/postgres'
     ports:
       - '8000:80'

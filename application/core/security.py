@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from secrets import token_hex
 from typing import Any
 
 from jose import jwt  # noqa
@@ -14,7 +15,7 @@ ALGORITHM = 'HS256'
 def create_access_token(subject: str | Any) -> str:
     expire = datetime.utcnow() + timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES)
 
-    to_encode = {'exp': expire, 'sub': str(subject)}
+    to_encode = {'exp': expire, 'sub': str(subject), 'jwti': token_hex(32)}
     encoded = jwt.encode(to_encode, config.SECRET_KEY, algorithm=ALGORITHM)
 
     return encoded

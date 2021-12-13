@@ -9,7 +9,7 @@ An example of FastAPI backend with an authentication system
 ```shell script
 poetry install
 
-docker-compose up -d db
+docker-compose up -d db redis
 alembic upgrade head
 python -m application.asgi
 ```
