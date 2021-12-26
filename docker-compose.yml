@@ -19,6 +19,19 @@ services:
     ports:
       - '1025:1025'
       - '8025:8025'
+  queue:
+    image: rabbitmq:3
+    ports:
+      - '5672:5672'
+  celeryworker:
+    build:
+      context: '.'
+      dockerfile: celeryworker.dockerfile
+    restart: always
+    depends_on:
+      - queue
+    environment:
+      CELERY_BROKER_URL: 'amqp://guest@queue//'
   prod-db:
     image: postgres:13-alpine
     restart: always
@@ -39,8 +52,10 @@ services:
   app:
     build:
       context: '.'
+      dockerfile: backend.dockerfile
     restart: always
     depends_on:
+      - celeryworker
       - mailhog
       - prod-db
       - prod-redis
@@ -51,6 +66,7 @@ services:
       SMTP_HOST: mailhog
       SMTP_PORT: 1025
       SMTP_TLS: 0
+      CELERY_BROKER_URL: 'amqp://guest@queue//'
     ports:
       - '8000:80'
     command: ["./docker/wait-for-it.sh", "prod-db:5432", "--", "./docker/runserver.sh"]
