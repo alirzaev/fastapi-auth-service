@@ -12,8 +12,8 @@ router = APIRouter(tags=['utils'])
 
 @router.post('/testEmail', status_code=204)
 def test_email(
-        email_to: EmailStr,
         background_tasks: BackgroundTasks,
+        email_to: EmailStr = Body(...),
         _: User = Depends(get_current_user)
 ):
     background_tasks.add_task(send_test_email, email_to)
