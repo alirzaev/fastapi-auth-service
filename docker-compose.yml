@@ -21,6 +21,7 @@ services:
       - '8025:8025'
   queue:
     image: rabbitmq:3
+    restart: always
     ports:
       - '5672:5672'
   celeryworker:
