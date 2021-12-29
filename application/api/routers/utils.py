@@ -20,7 +20,7 @@ def test_email(
     return Response(status_code=204)
 
 
-@router.post("/testCelery/", status_code=204)
+@router.post("/testCelery", status_code=204)
 def test_celery(
         message: str = Body(...),
         _: User = Depends(get_current_user)
