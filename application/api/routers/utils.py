@@ -11,7 +11,7 @@ router = APIRouter(tags=['utils'])
 
 
 @router.post('/testEmail', status_code=204)
-def test_email(
+async def test_email(
         background_tasks: BackgroundTasks,
         email_to: EmailStr = Body(...),
         _: User = Depends(get_current_user)
@@ -20,8 +20,8 @@ def test_email(
     return Response(status_code=204)
 
 
-@router.post("/testCelery", status_code=204)
-def test_celery(
+@router.post('/testCelery', status_code=204)
+async def test_celery(
         message: str = Body(...),
         _: User = Depends(get_current_user)
 ):

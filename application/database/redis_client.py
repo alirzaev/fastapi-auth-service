@@ -1,5 +1,5 @@
-from redis import Redis
+import aioredis
 
 from application.core.config import config
 
-redis_client = Redis.from_url(config.REDIS_URL)
+redis_client = aioredis.from_url(config.REDIS_URL)

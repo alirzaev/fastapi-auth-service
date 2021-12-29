@@ -6,7 +6,7 @@ from pydantic import BaseSettings, validator
 class Config(BaseSettings):
     DEBUG: bool = True
 
-    SQLALCHEMY_DATABASE_URL: str = 'postgresql://postgres:postgres@localhost:5432/postgres'
+    SQLALCHEMY_DATABASE_URL: str = 'postgresql+asyncpg://postgres:postgres@localhost:5432/postgres'
 
     REDIS_URL: str = 'redis://localhost/0'
 

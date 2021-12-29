@@ -12,13 +12,14 @@ uvicorn = "^0.16.0"
 alembic = "^1.7.5"
 SQLAlchemy = "^1.4.28"
 pydantic = {extras = ["email"], version = "^1.8.2"}
-psycopg2-binary = "^2.9.2"
 python-multipart = "^0.0.5"
 passlib = {extras = ["bcrypt"], version = "^1.7.2"}
 python-jose = {extras = ["cryptography"], version = "^3.1.0"}
-redis = "^4.0.2"
 emails = "^0.6"
 celery = "^5.2.1"
+asyncpg = "^0.25.0"
+aioredis = "^2.0.1"
+asyncio = "^3.4.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"

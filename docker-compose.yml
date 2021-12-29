@@ -63,7 +63,7 @@ services:
     environment:
       DEBUG: 0
       REDIS_URL: 'redis://prod-redis/0'
-      SQLALCHEMY_DATABASE_URL: 'postgresql://postgres:postgres@prod-db/postgres'
+      SQLALCHEMY_DATABASE_URL: 'postgresql+asyncpg://postgres:postgres@prod-db/postgres'
       SMTP_HOST: mailhog
       SMTP_PORT: 1025
       SMTP_TLS: 0

@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import Response
 
 from application import crud
@@ -17,28 +17,28 @@ router = APIRouter(tags=['auth'])
 
 
 @router.post('/signup', response_model=schemas.User)
-def create_user(
+async def create_user(
         user_in: schemas.UserCreate,
-        db: Session = Depends(get_db)
+        db: AsyncSession = Depends(get_db)
 ):
-    user = crud.user.get_by_email(db, user_in.email)
+    user = await crud.user.get_by_email(db, user_in.email)
 
     if user is not None:
         raise HTTPException(
             status_code=400,
             detail='The user with this username already exists in the system.'
         )
-    user = crud.user.create(db, user_in)
+    user = await crud.user.create(db, user_in)
 
     return user
 
 
 @router.post('/signin', response_model=schemas.Token)
-def login_user(
-        db: Session = Depends(get_db),
+async def login_user(
+        db: AsyncSession = Depends(get_db),
         form_data: OAuth2PasswordRequestForm = Depends()
 ):
-    user = crud.user.authenticate(db, form_data.username, form_data.password)
+    user = await crud.user.authenticate(db, form_data.username, form_data.password)
 
     if user is None:
         raise HTTPException(status_code=400, detail='Incorrect email or password')
@@ -50,25 +50,25 @@ def login_user(
 
 
 @router.post('/checkToken', response_model=schemas.User)
-def check_token(
+async def check_token(
         current_user: User = Depends(get_current_user)
 ):
     return current_user
 
 
 @router.post('/revokeToken', status_code=204)
-def revoke_token(
+async def revoke_token(
         token_payload: schemas.TokenPayload = Depends(get_token_payload)
 ):
-    jwti = token_payload.jwti
+    jwt_id = token_payload.jwti
 
-    redis_client.setex(jwti, timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES), 'true')
+    await redis_client.setex(jwt_id, timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES), 'true')
 
     return Response(status_code=204)
 
 
 @router.post('/refreshToken', response_model=schemas.Token)
-def refresh_token(
+async def refresh_token(
         current_user: User = Depends(get_current_user)
 ):
     return {
