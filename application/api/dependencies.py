@@ -16,11 +16,8 @@ reusable_oauth2 = OAuth2PasswordBearer(tokenUrl='/auth/signin')
 
 
 async def get_db():
-    try:
-        db = AsyncSessionLocal()
+    async with AsyncSessionLocal() as db:
         yield db
-    finally:
-        await db.close()  # noqa
 
 
 async def get_token_payload(
