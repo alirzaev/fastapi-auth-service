@@ -10,4 +10,6 @@ RUN poetry install --no-root
 
 COPY . .
 
+RUN chmod +x ./docker/runworker.sh
+
 CMD ["./docker/runworker.sh"]

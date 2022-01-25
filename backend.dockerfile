@@ -10,4 +10,7 @@ RUN poetry install --no-root
 
 COPY . .
 
+RUN chmod +x ./docker/wait-for-it.sh
+RUN chmod +x ./docker/runserver.sh
+
 CMD ["./docker/runserver.sh"]
