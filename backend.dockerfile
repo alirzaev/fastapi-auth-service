@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.9-slim
 EXPOSE 80
 
 WORKDIR /usr/src/project
