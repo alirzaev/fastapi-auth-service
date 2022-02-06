@@ -3,7 +3,7 @@ from pydantic import EmailStr
 from starlette.responses import Response
 
 from application.api.dependencies import get_current_user
-from application.core.celery_app import celery_app
+from application.core.dramatiq_worker import test_celery as test_celery_task
 from application.database.models import User
 from application.utils import send_test_email
 
@@ -25,5 +25,5 @@ async def test_celery(
         message: str = Body(...),
         _: User = Depends(get_current_user)
 ):
-    celery_app.send_task('application.worker.test_celery', args=[message])
+    test_celery_task.send(message)
     return Response(status_code=204)

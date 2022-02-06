@@ -27,7 +27,7 @@ class Config(BaseSettings):
 
     EMAILS_ENABLED: bool = False
 
-    CELERY_BROKER_URL: str = 'amqp://guest@localhost//'
+    MESSAGE_BROKER_URL: str = 'amqp://localhost/'
 
     @validator("EMAILS_ENABLED", pre=True)
     def get_emails_enabled(cls, v: bool, values: Dict[str, Any]) -> bool:  # noqa

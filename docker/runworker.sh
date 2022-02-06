@@ -1,3 +1,3 @@
 #!/bin/sh
 
-celery -A application.worker worker -l info -c 1
+dramatiq application.core.dramatiq_worker -p 1
