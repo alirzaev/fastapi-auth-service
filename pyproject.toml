@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fastapi-auth"
+name = "fastapi-auth-service"
 version = "0.1.0"
 description = "An example of FastAPI backend with an authentication system"
 authors = ["AliRzaev <alirzaev1996@gmail.com>"]
